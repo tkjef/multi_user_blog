@@ -1,0 +1,6 @@
+<a href="/blog/newcomment">Submit new comment</a></div>
+
+  {% for c in comments %}
+    {{c.render() | safe}}
+    <br><br>
+  {% endfor %}

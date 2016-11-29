@@ -1,0 +1,22 @@
+<div class="article">
+    <div class="article-heading">
+        <div class="article-title">
+            <a href="{{'/blog/%s' % a.key().id()}}">{{a.subject}}</a>
+        </div>
+
+        <div class="article-date">
+            {{a.created.strftime("%b %d, %Y")}}
+        </div>
+    </div>
+
+    <div class="article-content">
+        {{a._render_text | safe}}
+    </div>
+    <div class="article-edit">
+        <br>
+        <a href="{{'/blog/%s/edit' % a.key().id()}}">Edit</a>
+    </div>
+    <div class="error">
+        {{error}}
+    </div>
+</div>

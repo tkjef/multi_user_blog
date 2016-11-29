@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="article">
+    <div class="article-heading">
+        <div class="article-title">
+            {{a.subject}}
+        </div>
+
+        <div class="article-date">
+            {{a.created.strftime("%b %d, %Y")}}
+        </div>
+    </div>
+
+    <div class="article-content">
+        {{a.content | safe}}
+        {{a._render_text | safe}}
+    </div>
+    <div class="error">
+        {{error}}
+    </div>
+</div>
+{% endblock %}
