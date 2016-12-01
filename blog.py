@@ -141,24 +141,17 @@ class User(db.Model):
         if u and valid_pw(name, pw, u.pw_hash):
             return u
 
-USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
-
-
 def valid_username(username):
+    USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
     return username and USER_RE.match(username)
 
-PASS_RE = re.compile(r"^.{3,20}$")
-
-
 def valid_password(password):
+    PASS_RE = re.compile(r"^.{3,20}$")
     return password and PASS_RE.match(password)
 
-EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
-
-
 def valid_email(email):
+    EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
     return not email or EMAIL_RE.match(email)
-
 
 class Signup(Handler):
 
@@ -338,7 +331,7 @@ class NewPost(Handler):
 
     def post(self):
         if not self.user:
-            self.redirect('/blog')
+            return self.redirect('/blog')
 
         subject = self.request.get('subject')
         content = self.request.get('content')
@@ -412,27 +405,29 @@ class EditPost(Handler):
             # self.render("article_error.html", a=a, error=error)
 
     def post(self, article_id):
+        key = db.Key.from_path('Article', int(article_id))
+        a = db.get(key)
         if not self.user:
             self.redirect('/blog')
+        elif self.user and self.user.key().id() == a.user_id:
+            subject = self.request.get('subject')
+            content = self.request.get('content')
 
-        subject = self.request.get('subject')
-        content = self.request.get('content')
-
-        if subject and content:
-            key = db.Key.from_path('Article', int(article_id))
-            a = db.get(key)
-            a.subject = subject
-            a.content = content
-            a.put()
-            self.redirect('/blog/%s' % str(a.key().id()))
-        else:
-            error = "subject and content, please!"
-            self.render(
-                "editpost.html",
-                subject=subject,
-                content=content,
-                error=error,
-                logio=self.logio)
+            if subject and content:
+                key = db.Key.from_path('Article', int(article_id))
+                a = db.get(key)
+                a.subject = subject
+                a.content = content
+                a.put()
+                self.redirect('/blog/%s' % str(a.key().id()))
+            else:
+                error = "subject and content, please!"
+                self.render(
+                    "editpost.html",
+                    subject=subject,
+                    content=content,
+                    error=error,
+                    logio=self.logio)
 
 
 class EditComment(Handler):
@@ -451,27 +446,27 @@ class EditComment(Handler):
             self.render("comment_error.html", c=c, error=error)
 
     def post(self, comment_id):
-        print comment_id
+        key = db.Key.from_path('Comment', int(comment_id))
+        c = db.get(key)
 
         if not self.user:
-            self.redirect('/blog')
+            return self.redirect('/blog')
+        elif self.user and self.user.key().id() == c.user_id:
+            content = self.request.get('content')
 
-        content = self.request.get('content')
-
-        if content:
-            key = db.Key.from_path('Comment', int(comment_id))
-            c = db.get(key)
-            c.content = content
-            c.put()
-            print c.key().id()
-            self.redirect('/blog/comment/%s' % str(c.key().id()))
-        else:
-            error = "content, please!"
-            self.render(
-                "editcomment.html",
-                content=content,
-                error=error,
-                logio=self.logio)
+            if content:
+                key = db.Key.from_path('Comment', int(comment_id))
+                c = db.get(key)
+                c.content = content
+                c.put()
+                return self.redirect('/blog/comment/%s' % str(c.key().id()))
+            else:
+                error = "content, please!"
+                self.render(
+                    "editcomment.html",
+                    content=content,
+                    error=error,
+                    logio=self.logio)
 
 
 class DeletePost(Handler):
