@@ -3,10 +3,9 @@
 {% block content %}
 <div class="home-submit"><a href="/">Home</a><br>
 <a href="/blog/newpost">Submit new post</a></div>
-
-  {% for a in articles %}
-    {{a.render() | safe}}
-    <br><br>
-  {% endfor %}
+    {% for a in articles %}
+        {{a.render() | safe}}
+        <br> <br>
+    {% endfor %}
 
 {% endblock %}

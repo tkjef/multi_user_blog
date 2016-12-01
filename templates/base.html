@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link type="text/css" rel="stylesheet" href="/static/main.css" />
+    <link type="text/css" rel="stylesheet" href="/static/main.css"/>
     <title>My Blog</title>
 </head>
 
 <body>
-    <a href="/blog" class="title">
-        My Blog
-    </a>
-
-    <div id="content">
+    <a href="/blog" class="title">My Blog</a>
+    {{logio | safe}}
+    <div id = "content">
         {% block content %}
         {% endblock %}
     </div>
 </body>
 </html>
-
